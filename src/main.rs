@@ -1814,7 +1814,9 @@
 //     println!("Success!");
 // }
 
+use std::fmt::format;
 use std::path::Component::ParentDir;
+use std::str::from_utf8;
 
 // #[derive(Debug)]
 // enum TrafficLightColor {
@@ -2171,4 +2173,449 @@ use std::path::Component::ParentDir;
 // fn sum<T: std::ops::Add<Output = T>>(x: T, y: T) -> T {
 //     x + y
 // }
-fn main() {}
+
+// struct Pair<T> {
+//     x: T,
+//     y: T,
+// }
+// impl<T> Pair<T> {
+//     fn new(x: T, y: T) -> Self {
+//         Self {
+//             x,
+//             y,
+//         }
+//     }
+// }
+// impl<T: std::fmt::Debug + PartialOrd + PartialEq> Pair<T> {
+//     fn cmp_display(&self) {
+//         if self.x >= self.y {
+//             println!("The largest member is x = {:?}", self.x);
+//         } else {
+//             println!("The largest member is y = {:?}", self.y);
+//         }
+//     }
+// }
+// #[derive(Debug, PartialOrd, PartialEq)]
+// struct Unit(i32);
+// fn main() {
+//     let pair = Pair::new(Unit(1), Unit(2));
+//
+//     pair.cmp_display();
+// }
+
+// trait Bird {
+//     fn quack(&self) -> String;
+// }
+// struct Duck;
+// impl Duck {
+//     fn swim(&self) {
+//         println!("Look, the duck is swimming");
+//     }
+// }
+// struct Swan;
+// impl Swan {
+//     fn fly(&self) {
+//         println!("Look, the duck.. oh sorry, the swan is flying")
+//     }
+// }
+// impl Bird for Duck {
+//     fn quack(&self) -> String {
+//         "duck duck".to_string()
+//     }
+// }
+// impl Bird for Swan {
+//     fn quack(&self) -> String {
+//         "swan swan".to_string()
+//     }
+// }
+// fn main() {
+//     let duck = Duck;
+//     duck.swim();
+//
+//     let bird = hatch_a_bird(2);
+//     assert_eq!(bird.quack(), "duck duck");
+//
+//     let bird = hatch_a_bird(1);
+//     assert_eq!(bird.quack(), "swan swan");
+//
+//     println!("Success")
+// }
+// fn hatch_a_bird(species: u8) -> Box<dyn Bird> {
+//     match species {
+//         1 => Box::new(Swan),
+//         2 => Box::new(Duck),
+//         _ => panic!(),
+//     }
+// }
+
+// trait Bird {
+//     fn quack(&self);
+// }
+// struct Duck;
+// impl Duck {
+//     fn fly(&self) {
+//         println!("Look, the duck is flying")
+//     }
+// }
+// struct Swan;
+// impl Swan {
+//     fn fly(&self) {
+//         println!("Look, the duck.. oh sorry, the swan is flying")
+//     }
+// }
+// impl Bird for Duck {
+//     fn quack(&self) {
+//         println!("{}", "duck duck")
+//     }
+// }
+// impl Bird for Swan {
+//     fn quack(&self) {
+//         print!("{}", "swan swan");
+//     }
+// }
+// fn main() {
+//     let birds: [&dyn Bird; 2] = [&Duck, &Swan];
+//
+//     for bird in birds {
+//         bird.quack();
+//
+//         // will not work because only the methods from the Bird trait are in the v-table??
+//         // the compiler cannot look it up at runtime
+//         // bird.fly();
+//     }
+// }
+
+// trait Draw {
+//     fn draw(&self) -> String;
+// }
+// impl Draw for u8 {
+//     fn draw(&self) -> String {
+//         format!("u8: {}", self)
+//     }
+// }
+// impl Draw for f64 {
+//     fn draw(&self) -> String {
+//         format!("f64: {}", self)
+//     }
+// }
+// fn main() {
+//     let x = 1.1f64;
+//     let y = 8u8;
+//
+//     draw_with_box(Box::new(x));
+//     draw_with_ref(&y);
+//
+//     println!("Success!");
+// }
+// fn draw_with_box(x: Box<dyn Draw>) {
+//     x.draw();
+// }
+// fn draw_with_ref(x: &dyn Draw) {
+//     x.draw();
+// }
+
+// trait Foo {
+//     fn method(&self) -> String;
+// }
+// impl Foo for u8 {
+//     fn method(&self) -> String { format!("u8: {}", *self) }
+// }
+// impl Foo for String {
+//     fn method(&self) -> String { format!("string: {}", *self) }
+// }
+// fn static_dispatch<T: Foo>(a: T) {
+//     a.method();
+// }
+// fn dynamic_dispatch(a: &dyn Foo) {
+//     a.method();
+// }
+// fn main()
+// {
+//     let x = 5u8;
+//     let y = "Hello".to_string();
+//
+//     static_dispatch(x);
+//     dynamic_dispatch(&y);
+// }
+
+// trait MyTrait {
+//     fn f(&self) -> Self;
+// }
+// impl MyTrait for u32 {
+//     fn f(&self) -> Self { 42 }
+// }
+// impl MyTrait for String {
+//     fn f(&self) -> Self { self.clone() }
+// }
+// fn my_function<T: MyTrait>(x: T) -> T {
+//     x.f()
+// }
+// fn main() {
+//     my_function(13_u32);
+//     my_function(String::from("abc"));
+//
+//     println!("Success!");
+// }
+
+// trait MyTrait {
+//     fn f(&self) -> Box<dyn MyTrait>;
+// }
+// impl MyTrait for u32 {
+//     fn f(&self) -> Box<dyn MyTrait> { Box::new(42) }
+// }
+// impl MyTrait for String {
+//     fn f(&self) -> Box<dyn MyTrait> { Box::new(self.clone()) }
+// }
+// fn my_function(x: Box<dyn MyTrait>) -> Box<dyn MyTrait> {
+//     x.f()
+// }
+// fn main() {
+//     my_function(Box::new(13_u32));
+//     my_function(Box::new(String::from("abc")));
+//
+//     println!("Success!");
+// }
+
+// ---
+
+// fn main() {
+//     let mut s = String::from("hello, ");
+//     s.push_str("world");
+//     s.push('!');
+//
+//     move_ownership(s.clone());
+//
+//     assert_eq!(s, "hello, world!");
+//
+//     println!("Success!");
+// }
+// fn move_ownership(s: String) {
+//     println!("ownership of \"{}\" is moved here!", s)
+// }
+
+// fn main() {
+//     let mut s = String::from("hello, world");
+//
+//     let slice1 = s.as_str();
+//     assert_eq!(slice1, "hello, world");
+//
+//     let slice2 = &s[..5];
+//     assert_eq!(slice2, "hello");
+//
+//     let slice3 = &mut s;
+//     slice3.push('!');
+//     assert_eq!(slice3, "hello, world");
+//
+//     println!("Success!");
+// }
+
+// fn main() {
+//     // how many heap allocations are happening here?
+//
+//     let s = String::from("hello, world"); // 1
+//
+//     let slice = &s;
+//
+//     let s = slice.to_string(); // 2
+//
+//     assert_eq!(s, "hello, world");
+//     println!("Success!");
+// }
+
+// fn main() {
+//     let s = String::from("hello, *");
+//     let slice1 = &s[..1];
+//     assert_eq!(slice1, "h");
+//
+//     let slice2 = &s[7..8];
+//     assert_eq!(slice2, "*");
+//
+//     for (i, c) in s.chars().enumerate() {
+//         if i == 7 {
+//             assert_eq!(c, '*');
+//         }
+//     }
+// }
+
+// use utf8_slice; // idk why its not working
+// fn main() {
+//     let s = "The 🚀 goes to the 🌑!";
+//
+//     let rocket = utf8_slice::slice(s, 4, 5);
+//     // will equal "🚀"
+// }
+
+// fn main() {
+//     let mut s = String::new();
+//     s.push_str("hello");
+//
+//     // spells "hello" in ascii
+//     let v = vec![104, 101, 108, 108, 111];
+//
+//     let s1 = String::from_utf8(v).unwrap();
+//
+//     assert_eq!(s, s1);
+//     println!("Success!");
+// }
+
+// fn main() {
+//     // you can predefine the amount of space you want a string to hold
+//     let mut s = String::with_capacity(25);
+//
+//     println!("{}", s.capacity());
+//
+//     for _ in 0..2 {
+//         s.push_str("hello"); // "hello", "hellohello"
+//         println!("{}", s.capacity());
+//     }
+//
+//     println!("Success!");
+// }
+
+// SECTION: VECTORS
+
+// fn main() {
+//     let arr: [u8; 3] = [1, 2, 3];
+//
+//     let v: Vec<u8> = Vec::from(arr);
+//     is_vec(v);
+//
+//     let v = vec![1, 2, 3];
+//     is_vec(v);
+//
+//     let v = vec!(1, 2, 3);
+//     is_vec(v.clone());
+//
+//     // new empty vector with length of 0 and capacity of 0
+//     let mut v1 = Vec::new();
+//     is_vec(v1.clone());
+//
+//     for i in &v {
+//         v1.push(*i);
+//     }
+//
+//     assert_eq!(v, v1);
+// }
+// fn is_vec(v: Vec<u8>) { }
+
+// fn main() {
+//     let mut v1 = Vec::from([1, 2, 4]);
+//     v1.pop();
+//     v1.push(3);
+//
+//     let mut v2 = Vec::new();
+//     v2.extend(&v1);
+//
+//     assert_eq!(v1, v2);
+//
+//     println!("Success!");
+// }
+
+// fn main() {
+//     let arr = [1, 2, 3];
+//     let v1 = Vec::from(arr);
+//     let v2: Vec<i32> = arr.into();
+//     assert_eq!(v1, v2);
+//
+//     let s = "hello".to_string();
+//     let v1: Vec<u8> = s.into();
+//
+//     let s = "hello".to_string();
+//     let v2 = s.into_bytes();
+//     assert_eq!(v1, v2);
+//
+//     let s = "hello";
+//     let v3 = Vec::from(s);
+//     assert_eq!(v2, v3);
+//
+//     let v4: Vec<i32> = [0; 10].into_iter().collect();
+//     assert_eq!(v4, vec!(0; 10));
+//
+//     println!("Success!");
+// }
+
+// fn main() {
+//     let mut v = Vec::from([1, 2, 3]);
+//     for i in 0..5 {
+//         println!("{:?}", v.get(i));
+//     }
+//
+//     for i in 0..5 {
+//         match v.get(i) {
+//             Some(e) => v[i] = e + 1,
+//             None => v.push(i + 2)
+//         }
+//     }
+//
+//     assert_eq!(v, vec![2, 3, 4, 5, 6]);
+//     println!("Success!");
+// }
+
+// fn main() {
+//     let mut v = vec![1, 2, 3];
+//
+//     let slice1 = &v[..];
+//     let slice2 = &v[0..v.len()];
+//
+//     assert_eq!(slice1, slice2);
+//
+//     let vec_ref = &mut v;
+//     (*vec_ref).push(4);
+//     let slice3 = &v[0..4];
+//
+//     assert_eq!(slice3, &[1, 2, 3, 4]);
+//
+//     println!("Success!");
+// }
+
+// fn main() {
+//     // when a vectors capacity is specified, its contents are stored on stack,
+//     // if capacity is increased, the vector will be reallocated to the heap, making things
+//     // a little slower
+//
+//     let mut vec = Vec::with_capacity(10);
+//
+//     assert_eq!(vec.len(), 0);
+//     assert_eq!(vec.capacity(), 10);
+//
+//     for i in 0..10 {
+//         vec.push(i);
+//     }
+//     assert_eq!(vec.len(), 10);
+//     assert_eq!(vec.capacity(), 10);
+//
+//     vec.push(11);
+//     assert_eq!(vec.len(), 11);
+//     assert!(vec.capacity() >= 11);
+//
+//     let mut vec = Vec::with_capacity(100);
+//     for i in 0..100 {
+//         vec.push(i);
+//     }
+//     assert_eq!(vec.len(), 100);
+//     assert_eq!(vec.capacity(), 100);
+//
+//     println!("Success!");
+// }
+
+// fn main() {
+//     // will not work
+//     let v = vec![1, 2.0, 3];
+// }
+
+// #[derive(Debug, PartialEq)]
+// enum IpAddr {
+//     V4(String),
+//     V6(String),
+// }
+// fn main() {
+//     let v = vec![
+//         IpAddr::V4("127.0.0.1".to_string()),
+//         IpAddr::V6("::1".to_string()),
+//     ];
+//
+//     assert_eq!(v[0], IpAddr::V4("127.0.0.1".to_string()));
+//     assert_eq!(v[1], IpAddr::V6("::1".to_string()));
+//
+//     println!("Success!");
+// }

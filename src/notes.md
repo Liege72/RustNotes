@@ -695,3 +695,71 @@ reference only points to a value already in memory
 - **Lifetime:** Box can be passed across scope, reference has limited lifetime
 - Box can be cloned, reference not
 - Box can be used in pattern matching
+
+---
+
+## Associated Types
+- Allow to specify a type that is associated with the trait
+- When implementing the trait for a specific type we have to specific the concrete type
+- Basically a type placeholder that the trait methods can use in their signature
+- Similar to generic types but are more flexible because they allow a trait to have different associated types for
+different implementing types
+<br>
+
+Below we define a trait that has an associated type and method that return a value of this type.
+**Example 1**
+```rust
+trait MyTrait {
+  type MyType;
+  
+  fn get_my_type(&self) -> Self::MyType;
+}
+```
+When implementing the trait for a specifi type (MyStruct), then we have to give the associated type MyType a concrete 
+type, in this case i32.
+**Example 2**
+```rust
+struct MyStruct { }
+
+impl MyTrait for MyStruct {
+  type MyType = i32;
+  
+  fn get_my_type(&self) -> Self::MyType {
+    return 42;
+  }
+}
+```
+
+---
+
+## The String Type
+A string consists of 3 things:
+1. Pointer to data stored on the heap
+2. Data size in bytes
+3. Total amount of memory received from the allocator
+```rust
+let s1 = String::from("hello");
+```
+| name     | value         |
+|----------|---------------|
+| ptr      | see ptr table |
+| len      | 5             |
+| capacity | 5             |
+
+**Pointer table**<br>
+
+| index | value |
+|-------|-------|
+| 0     | h     |
+| 1     | e     |
+| 2     | l     |
+| 3     | l     |
+| 4     | o     |
+
+---
+
+## Vectors
+- Like arrays, but dynamically sized, meaning can grow and shrink
+- Allocated on the heap as a contiguous block of memory
+- All elements must have the same type
+- Special macro: vec!
